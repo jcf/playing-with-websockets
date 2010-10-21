@@ -59,20 +59,20 @@
       $(function() {
         var $message = $('#message');
         var $board = $('#board');
-        
-        var socket = new WebSocket('ws://jmac.local:8080/');
-        
+
+        var socket = new WebSocket('ws://#{@localhost}:8080/');
+
         socket.onmessage = function(event) {
           $board.append('<li>' + event.data + '</li>');
           $board.attr({scrollTop: $board.outerHeight()});
         }
-        
+
         $('form').submit(function(e) {
           e.preventDefault();
-          
+
           var message = $message.val();
-          if(message.length) socket.send(message);
-          
+          if (message.length) socket.send(message);
+
           $message.val('');
           return false;
         });

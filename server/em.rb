@@ -1,7 +1,4 @@
-#!/usr/bin/ruby
 # encoding: utf-8
-
-$: << File.dirname(__FILE__)
 
 require 'rubygems'
 require 'em-websocket'
@@ -13,13 +10,13 @@ EventMachine.run do
     ws.onopen do
       sid = @channel.subscribe { |msg| ws.send msg }
 
-      @channel.push "#{sid} connected!"
+      @channel.push "#{sid} gas baggers!"
 
-      ws.onmessage { |msg| @channel.push "<#{sid}>: #{msg}" }
+      ws.onmessage { |msg| @channel.push "<Gas bagger #{sid}>: #{msg}" }
 
       ws.onclose { @channel.unsubscribe(sid) }
     end
   end
 
-  puts "Server started"
+  puts 'Server started'
 end
