@@ -1,0 +1,86 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=utf-8", "http-equiv" => "Content-type"}/
+    %title Sockets
+    %style{:type => 'text/css'}
+      :sass
+        body
+          font: 14px 'helvetica neue', helvetica, sans-serif
+          background-color: #222
+          padding: 0
+          margin: 0
+
+        #container
+          width: 500px
+          background-color: #fff
+          padding: 20px
+          margin: 20px auto 0
+
+        ul#board
+          height: 400px
+          margin: 0 auto 20px
+          padding: 20px
+          border: 1px inset #ccc
+          overflow-y: scroll
+          color: #000
+          list-style: none
+          li
+            margin: 0
+            padding: 5px 0
+            line-height: 20px
+            border-bottom: 1px dotted #ccc
+            &:last-child
+              border-bottom: 0 none
+
+        #container form
+          color: #fff
+          text-shadow: 0 0 1px #000
+
+        form input
+          &[type="text"]
+            font-size: 14px
+            padding: 5px
+            font: 14px 'helvetica neue', helvetica, sans-serif
+            color: #444
+            height: 25px
+            border: 1px solid #ccc
+          &[type="submit"]
+            background-color: #f5f5f5
+            border: 1px solid #aaa
+            font: 14px 'helvetica neue', helvetica, sans-serif
+            height: 30px
+            border-radius: 5px
+            cursor: pointer
+
+    %script{:src => "https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js", :type => "text/javascript"}
+
+    :javascript
+      $(function() {
+        var $message = $('#message');
+        var $board = $('#board');
+        
+        var socket = new WebSocket('ws://jmac.local:8080/');
+        
+        socket.onmessage = function(event) {
+          $board.append('<li>' + event.data + '</li>');
+          $board.attr({scrollTop: $board.outerHeight()});
+        }
+        
+        $('form').submit(function(e) {
+          e.preventDefault();
+          
+          var message = $message.val();
+          if(message.length) socket.send(message);
+          
+          $message.val('');
+          return false;
+        });
+      });
+
+  %body
+    #container
+      %ul#board
+      %form{:action => "/"}
+        %input#message{:type => "text"}
+        %input{:type => "submit", :value => "Send"}
